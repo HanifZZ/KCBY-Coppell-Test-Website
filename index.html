@@ -150,8 +150,12 @@
     transition:all .3s;cursor:pointer;
   }
   .ep-card:hover{border-color:var(--accent);transform:translateY(-4px)}
-  .ep-thumb{aspect-ratio:16/9;background:linear-gradient(135deg,#1a1a1a,#2a1a1a);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  .ep-thumb::after{content:"▶";position:absolute;font-size:48px;color:rgba(255,255,255,.15);transition:all .3s}
+  .ep-thumb{aspect-ratio:16/9;background:linear-gradient(135deg,#1a1a1a,#2a1a1a);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background-size:cover;background-position:center}
+  .ep-thumb.has-img{background-color:#000}
+  .ep-thumb.has-img::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.7));z-index:1}
+  .ep-thumb.has-img .ep-num{display:none}
+  .ep-thumb::after{content:"▶";position:absolute;font-size:48px;color:rgba(255,255,255,.15);transition:all .3s;z-index:2}
+  .ep-thumb.has-img::after{color:rgba(255,255,255,.92);text-shadow:0 4px 20px rgba(0,0,0,.7);font-size:56px}
   .ep-card:hover .ep-thumb::after{color:var(--accent);transform:scale(1.2)}
   .ep-thumb .ep-num{font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:96px;color:rgba(255,255,255,.08);position:absolute;line-height:1;letter-spacing:-.04em}
   .ep-meta{padding:20px 22px}
@@ -188,10 +192,15 @@
   .staff-photo{
     aspect-ratio:1;background:linear-gradient(135deg,#2a1a1a,#1a1a1a);
     display:flex;align-items:center;justify-content:center;
-    font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:60px;color:rgba(230,57,70,.3);letter-spacing:-.02em;
     position:relative;overflow:hidden;
+    background-size:cover;background-position:center;
   }
-  .staff-photo::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,transparent,rgba(0,0,0,.5))}
+  .staff-photo .placeholder{
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:60px;
+    color:rgba(230,57,70,.35);letter-spacing:-.02em;
+  }
+  .staff-photo.has-img .placeholder{display:none}
+  .staff-photo::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,transparent,rgba(0,0,0,.5));pointer-events:none}
   .staff-info{padding:20px}
   .staff-info .role{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:6px}
   .staff-info h4{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:20px;letter-spacing:-.01em}
@@ -332,13 +341,43 @@
   .staff-section-edit{background:var(--bg-2);border:1px solid var(--line);border-radius:4px;padding:20px;margin-bottom:16px}
   .staff-section-edit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}
   .staff-section-edit-head input{flex:1;background:var(--bg-3);border:1px solid var(--line);color:var(--ink);padding:10px 14px;font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:18px;color:var(--accent);border-radius:2px}
-  .staff-edit-row{display:grid;grid-template-columns:60px 1fr 1fr 1fr auto;gap:8px;margin-bottom:6px;align-items:center}
+  .staff-edit-row{display:grid;grid-template-columns:60px 60px 1fr 1fr 1fr auto;gap:8px;margin-bottom:6px;align-items:center}
   .staff-edit-row input{background:var(--bg-3);border:1px solid var(--line);color:var(--ink);padding:8px 10px;font-size:12px;border-radius:2px}
   .staff-edit-row .del-btn{background:transparent;border:1px solid var(--line);color:var(--ink-dim);padding:6px 10px;font-size:11px;cursor:pointer;border-radius:2px}
   .staff-edit-row .del-btn:hover{border-color:#c92e3a;color:#c92e3a}
   .reset-card{background:var(--bg-2);border:1px solid var(--line);border-radius:4px;padding:32px;max-width:560px}
   .reset-card h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:24px;margin-bottom:12px}
   .reset-card p{color:var(--ink-dim);font-size:14px;margin-bottom:20px}
+  /* Photo upload widget */
+  .photo-upload{
+    width:60px;height:60px;border-radius:6px;border:1px dashed var(--line);
+    background:var(--bg-3) center/cover no-repeat;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:10px;color:var(--ink-dim);font-weight:600;letter-spacing:.05em;text-align:center;
+    transition:all .2s;flex-shrink:0;position:relative;overflow:hidden;
+  }
+  .photo-upload:hover{border-color:var(--accent);color:var(--accent)}
+  .photo-upload.has-photo{border-style:solid;border-color:var(--accent)}
+  .photo-upload.has-photo .photo-label{
+    position:absolute;inset:auto 0 0 0;background:rgba(0,0,0,.7);color:#fff;
+    padding:3px;font-size:9px;text-transform:uppercase;letter-spacing:.1em;
+  }
+  .photo-upload input[type=file]{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+  /* Achievements / Advertising / Contact editors */
+  .editor-section{background:var(--bg-2);border:1px solid var(--line);border-radius:4px;padding:20px;margin-bottom:16px}
+  .editor-section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+  .editor-section-head h4{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:18px;color:var(--accent)}
+  .editor-section .row{display:grid;grid-template-columns:1fr 1fr 120px auto;gap:8px;margin-bottom:6px;align-items:center}
+  .editor-section .row input{background:var(--bg-3);border:1px solid var(--line);color:var(--ink);padding:8px 10px;font-size:12px;border-radius:2px;width:100%}
+  .editor-section .row .del-btn{background:transparent;border:1px solid var(--line);color:var(--ink-dim);padding:6px 10px;font-size:11px;cursor:pointer;border-radius:2px}
+  .editor-section .row .del-btn:hover{border-color:#c92e3a;color:#c92e3a}
+  .editor-field{margin-bottom:14px}
+  .editor-field label{display:block;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim);font-weight:600;margin-bottom:6px}
+  .editor-field input,.editor-field textarea{
+    width:100%;background:var(--bg-3);border:1px solid var(--line);color:var(--ink);
+    padding:10px 12px;font-family:'Manrope',sans-serif;font-size:13px;border-radius:2px;
+  }
+  .editor-field textarea{min-height:90px;resize:vertical}
   .saved-toast{
     position:fixed;bottom:24px;right:24px;z-index:1000;
     background:#1f3a23;border:1px solid #2d6638;color:#9ee5a8;
@@ -427,9 +466,9 @@
           <a href="#staff" onclick="route('staff')" class="btn ghost">Meet the Crew</a>
         </div>
       </div>
-      <div class="video-wrap">
+      <div class="video-wrap" id="heroVideoWrap">
         <div class="video-badge">On Air</div>
-        <iframe src="https://player.vimeo.com/video/76979871?title=0&byline=0" allowfullscreen></iframe>
+        <iframe id="heroVideo" src="" allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
   </section>
@@ -447,20 +486,7 @@
   <section class="block">
     <div class="eyebrow">From the newsroom</div>
     <h2 class="section-title display">Recent shows.</h2>
-    <div class="ep-grid">
-      <div class="ep-card" onclick="route('episodes')">
-        <div class="ep-thumb"><span class="ep-num">26</span></div>
-        <div class="ep-meta"><div class="tag">25–26 · Latest</div><h3>Show 26</h3><p>Spring kickoff, sports recap and senior spotlights.</p></div>
-      </div>
-      <div class="ep-card" onclick="route('episodes')">
-        <div class="ep-thumb"><span class="ep-num">25</span></div>
-        <div class="ep-meta"><div class="tag">25–26</div><h3>Show 25</h3><p>Inside the music wing and a feature on robotics.</p></div>
-      </div>
-      <div class="ep-card" onclick="route('episodes')">
-        <div class="ep-thumb"><span class="ep-num">24</span></div>
-        <div class="ep-meta"><div class="tag">25–26</div><h3>Show 24</h3><p>Coppell sports and culture stories.</p></div>
-      </div>
-    </div>
+    <div class="ep-grid" id="recentShowsGrid"></div>
     <div style="margin-top:36px"><a href="#episodes" onclick="route('episodes')" class="btn ghost">All Episodes →</a></div>
   </section>
 </div>
@@ -530,6 +556,9 @@
         <button class="adm-tab on" data-tab="ep">KCBY Episodes</button>
         <button class="adm-tab" data-tab="es">Español</button>
         <button class="adm-tab" data-tab="staff">Staff</button>
+        <button class="adm-tab" data-tab="ach">Achievements</button>
+        <button class="adm-tab" data-tab="adv">Advertising</button>
+        <button class="adm-tab" data-tab="con">Contact</button>
         <button class="adm-tab" data-tab="reset">Reset</button>
       </div>
 
@@ -562,6 +591,31 @@
         <div id="staffEditor"></div>
       </div>
 
+      <!-- Achievements editor -->
+      <div class="adm-pane" id="pane-ach">
+        <div class="adm-toolbar">
+          <button class="btn small" onclick="addAchYear()">+ Add Year</button>
+          <button class="btn small" onclick="saveAch()" style="margin-left:auto">Save All Changes</button>
+        </div>
+        <div id="achEditor"></div>
+      </div>
+
+      <!-- Advertising editor -->
+      <div class="adm-pane" id="pane-adv">
+        <div class="adm-toolbar">
+          <button class="btn small" onclick="saveAdv()" style="margin-left:auto">Save All Changes</button>
+        </div>
+        <div id="advEditor"></div>
+      </div>
+
+      <!-- Contact editor -->
+      <div class="adm-pane" id="pane-con">
+        <div class="adm-toolbar">
+          <button class="btn small" onclick="saveCon()" style="margin-left:auto">Save All Changes</button>
+        </div>
+        <div id="conEditor"></div>
+      </div>
+
       <!-- Reset pane -->
       <div class="adm-pane" id="pane-reset">
         <div class="reset-card">
@@ -580,70 +634,7 @@
     <div class="eyebrow">Partner with us</div>
     <h1 class="section-title display">Feature your<br>business on KCBY.</h1>
     <p class="section-sub">Interested in having your business featured on KCBY?</p>
-
-    <div class="ad-intro">
-      <p>Not only does everyone in Coppell High School view KCBY, but also members of the community such as subscribers and parents — reaching approximately 6,000 people a week from our website to our social media platforms.</p>
-      <p>We use professional state-of-the-art equipment to produce a wide variety of advertisements, public service announcements, corporate videos, and more. Our creative and enthusiastic staff is prepared to tailor your specific media needs.</p>
-      <p>For our rate cards, contact one of our Program Directors below.</p>
-    </div>
-
-    <h3 class="ad-section-title">Program Directors</h3>
-    <div class="director-grid">
-      <a href="mailto:hxr0184@g.coppellisd.com" class="director">
-        <div class="director-mark">HR</div>
-        <div class="director-info">
-          <div class="role">Program Director</div>
-          <h4>Hemi Riojas</h4>
-          <p>hxr0184@g.coppellisd.com</p>
-        </div>
-      </a>
-      <a href="mailto:aom9635@g.coppellisd.com" class="director">
-        <div class="director-mark">AM</div>
-        <div class="director-info">
-          <div class="role">Program Director</div>
-          <h4>Aaron Montes</h4>
-          <p>aom9635@g.coppellisd.com</p>
-        </div>
-      </a>
-      <a href="mailto:axs3432@g.coppellisd.com" class="director">
-        <div class="director-mark">AS</div>
-        <div class="director-info">
-          <div class="role">Program Director</div>
-          <h4>Anoushka Sharma</h4>
-          <p>axs3432@g.coppellisd.com</p>
-        </div>
-      </a>
-    </div>
-
-    <h3 class="ad-section-title">Featured Work</h3>
-
-    <div class="feature-ad">
-      <div class="feature-video">
-        <div class="video-wrap">
-          <div class="video-badge">Special Projects</div>
-          <iframe src="https://player.vimeo.com/video/76979871?title=0&byline=0" allowfullscreen></iframe>
-        </div>
-      </div>
-      <div class="feature-text">
-        <div class="tag-pill">Local Eatery</div>
-        <h3 class="display">San Daniele<br><span class="serif" style="color:var(--accent)">Advertisement</span></h3>
-        <p>This video was produced by KCBY's Special Projects team as an advertisement for a local Italian eatery: San Daniele. This advertisement was featured on KCBY's weekly show. The team worked over the course of roughly three weeks to discuss with the restaurant owners and produce a video that represented all of the key aspects they found necessary to show.</p>
-      </div>
-    </div>
-
-    <div class="feature-ad reverse">
-      <div class="feature-video">
-        <div class="video-wrap">
-          <div class="video-badge">Special Projects</div>
-          <iframe src="https://player.vimeo.com/video/76979871?title=0&byline=0" allowfullscreen></iframe>
-        </div>
-      </div>
-      <div class="feature-text">
-        <div class="tag-pill">Coppell Staple</div>
-        <h3 class="display">J Macklin's<br><span class="serif" style="color:var(--accent)">Advertisement</span></h3>
-        <p>For a Coppell community staple — J Macklin's — KCBY's Special Projects team met with the restaurant owners to discuss the restaurant's history in Coppell and the story they wanted to convey. This video was given to J Macklin's for their marketing use.</p>
-      </div>
-    </div>
+    <div id="advertisingContent"></div>
   </section>
 </div>
 
@@ -653,46 +644,7 @@
     <div class="eyebrow">Hardware</div>
     <h1 class="section-title display">Achievements.</h1>
     <p class="section-sub">A program built on the work of hundreds of students over three decades. Here's a look at the recognition KCBY-TV has earned along the way.</p>
-
-    <div class="award-year">
-      <h3>2023–24</h3>
-      <div class="award-list">
-        <div class="award"><div><div class="org">NSPA</div><div class="name">Broadcast Pacemaker Finalist</div></div><div class="place">Finalist</div></div>
-        <div class="award"><div><div class="org">ILPC</div><div class="name">Star Award – Broadcast</div></div><div class="place">1st</div></div>
-        <div class="award"><div><div class="org">CSPA</div><div class="name">Gold Crown – Hybrid Broadcast</div></div><div class="place">Gold</div></div>
-        <div class="award"><div><div class="org">JEA/NSPA</div><div class="name">Best of Show – Broadcast</div></div><div class="place">3rd</div></div>
-      </div>
-    </div>
-
-    <div class="award-year">
-      <h3>2022–23</h3>
-      <div class="award-list">
-        <div class="award"><div><div class="org">NSPA</div><div class="name">Broadcast Pacemaker</div></div><div class="place">Winner</div></div>
-        <div class="award"><div><div class="org">ILPC</div><div class="name">Bronze Star</div></div><div class="place">Bronze</div></div>
-        <div class="award"><div><div class="org">CSPA</div><div class="name">Silver Crown</div></div><div class="place">Silver</div></div>
-        <div class="award"><div><div class="org">TAJE</div><div class="name">Best Sports Feature</div></div><div class="place">1st</div></div>
-      </div>
-    </div>
-
-    <div class="award-year">
-      <h3>2021–22</h3>
-      <div class="award-list">
-        <div class="award"><div><div class="org">NSPA</div><div class="name">Pacemaker Finalist</div></div><div class="place">Finalist</div></div>
-        <div class="award"><div><div class="org">ILPC</div><div class="name">Star Award</div></div><div class="place">1st</div></div>
-        <div class="award"><div><div class="org">JEA/NSPA</div><div class="name">Best of Show</div></div><div class="place">5th</div></div>
-        <div class="award"><div><div class="org">CSPA</div><div class="name">Crown Finalist</div></div><div class="place">Finalist</div></div>
-      </div>
-    </div>
-
-    <div class="award-year">
-      <h3>2020–21</h3>
-      <div class="award-list">
-        <div class="award"><div><div class="org">NSPA</div><div class="name">Pacemaker Finalist</div></div><div class="place">Finalist</div></div>
-        <div class="award"><div><div class="org">ILPC</div><div class="name">Bronze Star</div></div><div class="place">Bronze</div></div>
-      </div>
-    </div>
-
-    <p style="font-size:13px;color:var(--ink-dim);margin-top:32px">Full archive: 2010–11 through 2019–20 awards available on request.</p>
+    <div id="achievementsContent"></div>
   </section>
 </div>
 
@@ -702,39 +654,7 @@
     <div class="eyebrow">Get in touch</div>
     <h1 class="section-title display">Contact us.</h1>
     <p class="section-sub">Story tip? Advertising question? Want to join the program? Drop us a line — we read every message.</p>
-
-    <div class="contact-grid">
-      <div class="contact-info">
-        <p>KCBY-TV is housed at Coppell High School in the journalism department. Whether you're a local business, a current student, or a parent — we'd love to hear from you.</p>
-        <div class="contact-block">
-          <div class="lab">Email</div>
-          <div class="val"><a href="mailto:kcby@coppellisd.com">kcby@coppellisd.com</a></div>
-        </div>
-        <div class="contact-block">
-          <div class="lab">Studio</div>
-          <div class="val">Coppell High School<br>185 W Parkway Blvd<br>Coppell, TX 75019</div>
-        </div>
-        <div class="contact-block">
-          <div class="lab">Follow</div>
-          <div class="val">@kcbytv</div>
-        </div>
-      </div>
-
-      <form onsubmit="event.preventDefault();alert('Thanks! Your message has been sent.');this.reset();">
-        <div class="field"><label>Name</label><input type="text" required></div>
-        <div class="field"><label>Email</label><input type="email" required></div>
-        <div class="field"><label>Topic</label>
-          <select>
-            <option>Story tip</option>
-            <option>Advertising</option>
-            <option>Joining KCBY</option>
-            <option>General question</option>
-          </select>
-        </div>
-        <div class="field"><label>Message</label><textarea required></textarea></div>
-        <button type="submit" class="btn">Send Message →</button>
-      </form>
-    </div>
+    <div id="contactContent"></div>
   </section>
 </div>
 
@@ -807,15 +727,8 @@ const KCBY_DEFAULT = {
     {n:22,t:"Show 22",d:"Spring break stories"},
     {n:21,t:"Show 21",d:"Mid-season check-in"}
   ],
-  "2023–24":[
-    {n:26,t:"Show 26",d:"Season finale"},
-    {n:25,t:"Show 25",d:"Senior signings"},
-    {n:24,t:"Show 24",d:"AP exam survival"},
-    {n:23,t:"Show 23",d:"Cultural spotlight"}
-  ],
-  "2022–23":[{n:26,t:"Show 26",d:"Season wrap-up"},{n:25,t:"Show 25",d:"Spring features"}],
-  "2021–22":[{n:26,t:"Show 26",d:"Final episode"},{n:25,t:"Show 25",d:"Year in review"}],
-  "2020–21":[{n:26,t:"Show 26",d:"Pandemic year finale"},{n:25,t:"Show 25",d:"Hybrid learning"}]
+  "2023–24":[{n:26,t:"Show 26",d:"Season finale"},{n:25,t:"Show 25",d:"Senior signings"}],
+  "2022–23":[{n:26,t:"Show 26",d:"Season wrap-up"}]
 };
 
 const ESPANOL_DEFAULT = {
@@ -827,60 +740,105 @@ const ESPANOL_DEFAULT = {
     {n:8,t:"Programa 8",d:"Eventos del campus"},
     {n:7,t:"Programa 7",d:"Especial de invierno"}
   ],
-  "2024–25":[{n:12,t:"Programa 12",d:"Final de temporada"},{n:11,t:"Programa 11",d:"Cultura latina"}],
-  "2023–24":[{n:12,t:"Programa 12",d:"Final de temporada"}],
-  "2022–23":[{n:12,t:"Programa 12",d:"Final"}]
+  "2024–25":[{n:12,t:"Programa 12",d:"Final de temporada"}]
 };
 
 const STAFF_DEFAULT = {
   members: 73,
   sections: [
     {title:"Program Director",cards:[
-      {role:"Program Director",name:"Add Name",note:"Senior · 4th year",initials:"PD"},
-      {role:"Program Director",name:"Add Name",note:"Senior · 4th year",initials:"PD"},
-      {role:"Program Director",name:"Add Name",note:"Senior · 3rd year",initials:"PD"}
+      {role:"Program Director",name:"Add Name",note:"Senior · 4th year",initials:"PD",photo:""},
+      {role:"Program Director",name:"Add Name",note:"Senior · 4th year",initials:"PD",photo:""},
+      {role:"Program Director",name:"Add Name",note:"Senior · 3rd year",initials:"PD",photo:""}
     ]},
     {title:"Directors",cards:[
-      {role:"Technical Director",name:"Add Name",note:"Senior",initials:"TD"},
-      {role:"Technical Director",name:"Add Name",note:"Senior",initials:"TD"},
-      {role:"Coordinating Producer",name:"Add Name",note:"1 per period",initials:"CP"},
-      {role:"Graphics / Webmaster Director",name:"Add Name",note:"Junior",initials:"GW"}
+      {role:"Technical Director",name:"Add Name",note:"Senior",initials:"TD",photo:""},
+      {role:"Technical Director",name:"Add Name",note:"Senior",initials:"TD",photo:""},
+      {role:"Coordinating Producer",name:"Add Name",note:"1 per period",initials:"CP",photo:""},
+      {role:"Graphics / Webmaster Director",name:"Add Name",note:"Junior",initials:"GW",photo:""}
     ]},
     {title:"Department Leads",cards:[
-      {role:"Special Segments",name:"Add Name",note:"Lead",initials:"SS"},
-      {role:"Special Segments",name:"Add Name",note:"Lead",initials:"SS"},
-      {role:"Broadcast",name:"Add Name",note:"1 per period",initials:"BR"},
-      {role:"Sports",name:"Add Name",note:"1 per period",initials:"SP"},
-      {role:"Social Media",name:"Add Name",note:"Lead",initials:"SM"},
-      {role:"Social Media",name:"Add Name",note:"Lead",initials:"SM"},
-      {role:"Special Projects",name:"Add Name",note:"Lead (1–2)",initials:"SX"}
+      {role:"Special Segments",name:"Add Name",note:"Lead",initials:"SS",photo:""},
+      {role:"Special Segments",name:"Add Name",note:"Lead",initials:"SS",photo:""},
+      {role:"Broadcast",name:"Add Name",note:"1 per period",initials:"BR",photo:""},
+      {role:"Sports",name:"Add Name",note:"1 per period",initials:"SP",photo:""},
+      {role:"Social Media",name:"Add Name",note:"Lead",initials:"SM",photo:""},
+      {role:"Social Media",name:"Add Name",note:"Lead",initials:"SM",photo:""},
+      {role:"Special Projects",name:"Add Name",note:"Lead (1–2)",initials:"SX",photo:""}
     ]},
     {title:"Operations",cards:[
-      {role:"New Member Coordinator",name:"Add Name",note:"1 per period",initials:"NM"},
-      {role:"Spirit",name:"Add Name",note:"Lead",initials:"SP"},
-      {role:"Spirit",name:"Add Name",note:"Lead",initials:"SP"},
-      {role:"Business",name:"Add Name",note:"Lead",initials:"BS"},
-      {role:"Marketing",name:"Add Name",note:"Lead",initials:"MK"},
-      {role:"C.A.M.S. Liaison",name:"Add Name",note:"Lead",initials:"CL"}
+      {role:"New Member Coordinator",name:"Add Name",note:"1 per period",initials:"NM",photo:""},
+      {role:"Spirit",name:"Add Name",note:"Lead",initials:"SP",photo:""},
+      {role:"Spirit",name:"Add Name",note:"Lead",initials:"SP",photo:""},
+      {role:"Business",name:"Add Name",note:"Lead",initials:"BS",photo:""},
+      {role:"Marketing",name:"Add Name",note:"Lead",initials:"MK",photo:""},
+      {role:"C.A.M.S. Liaison",name:"Add Name",note:"Lead",initials:"CL",photo:""}
     ]},
     {title:"Adviser",cards:[
-      {role:"Faculty Adviser",name:"Add Name",note:"Coppell High School",initials:"AD"}
+      {role:"Faculty Adviser",name:"Add Name",note:"Coppell High School",initials:"AD",photo:""}
     ]}
   ]
 };
 
+const ACH_DEFAULT = [
+  {year:"2023–24",awards:[
+    {org:"NSPA",name:"Broadcast Pacemaker Finalist",place:"Finalist"},
+    {org:"ILPC",name:"Star Award – Broadcast",place:"1st"},
+    {org:"CSPA",name:"Gold Crown – Hybrid Broadcast",place:"Gold"},
+    {org:"JEA/NSPA",name:"Best of Show – Broadcast",place:"3rd"}
+  ]},
+  {year:"2022–23",awards:[
+    {org:"NSPA",name:"Broadcast Pacemaker",place:"Winner"},
+    {org:"ILPC",name:"Bronze Star",place:"Bronze"},
+    {org:"CSPA",name:"Silver Crown",place:"Silver"},
+    {org:"TAJE",name:"Best Sports Feature",place:"1st"}
+  ]},
+  {year:"2021–22",awards:[
+    {org:"NSPA",name:"Pacemaker Finalist",place:"Finalist"},
+    {org:"ILPC",name:"Star Award",place:"1st"},
+    {org:"JEA/NSPA",name:"Best of Show",place:"5th"},
+    {org:"CSPA",name:"Crown Finalist",place:"Finalist"}
+  ]},
+  {year:"2020–21",awards:[
+    {org:"NSPA",name:"Pacemaker Finalist",place:"Finalist"},
+    {org:"ILPC",name:"Bronze Star",place:"Bronze"}
+  ]}
+];
+
+const ADV_DEFAULT = {
+  intro:[
+    "Not only does everyone in Coppell High School view KCBY, but also members of the community such as subscribers and parents — reaching approximately 6,000 people a week from our website to our social media platforms.",
+    "We use professional state-of-the-art equipment to produce a wide variety of advertisements, public service announcements, corporate videos, and more. Our creative and enthusiastic staff is prepared to tailor your specific media needs.",
+    "For our rate cards, contact one of our Program Directors below."
+  ],
+  directors:[
+    {name:"Hemi Riojas",email:"hxr0184@g.coppellisd.com",role:"Program Director",initials:"HR"},
+    {name:"Aaron Montes",email:"aom9635@g.coppellisd.com",role:"Program Director",initials:"AM"},
+    {name:"Anoushka Sharma",email:"axs3432@g.coppellisd.com",role:"Program Director",initials:"AS"}
+  ],
+  features:[
+    {title:"San Daniele",subtitle:"Advertisement",tag:"Local Eatery",video:"",description:"This video was produced by KCBY's Special Projects team as an advertisement for a local Italian eatery: San Daniele. This advertisement was featured on KCBY's weekly show. The team worked over the course of roughly three weeks to discuss with the restaurant owners and produce a video that represented all of the key aspects they found necessary to show.",reverse:false},
+    {title:"J Macklin's",subtitle:"Advertisement",tag:"Coppell Staple",video:"",description:"For a Coppell community staple — J Macklin's — KCBY's Special Projects team met with the restaurant owners to discuss the restaurant's history in Coppell and the story they wanted to convey. This video was given to J Macklin's for their marketing use.",reverse:true}
+  ]
+};
+
+const CON_DEFAULT = {
+  intro:"KCBY-TV is housed at Coppell High School in the journalism department. Whether you're a local business, a current student, or a parent — we'd love to hear from you.",
+  email:"kcby@coppellisd.com",
+  address:"Coppell High School\n185 W Parkway Blvd\nCoppell, TX 75019",
+  social:"@kcbytv"
+};
+
 // =============================================================
-// AUTH — change these passwords inline if needed
+// AUTH
 // =============================================================
 const ADMIN_USERS = {
   "hemi":     {pass:"kcby2026", name:"Hemi"},
   "aaron":    {pass:"kcby2026", name:"Aaron"},
   "anoushka": {pass:"kcby2026", name:"Anoushka"}
 };
-
 function getCurrentUser(){return sessionStorage.getItem("kcby_admin_user");}
 function isLoggedIn(){return !!getCurrentUser();}
-
 function handleLogin(){
   const u = document.getElementById("loginUser").value.trim().toLowerCase();
   const p = document.getElementById("loginPass").value;
@@ -893,7 +851,6 @@ function handleLogin(){
     err.textContent = "Incorrect username or password.";
   }
 }
-
 function handleLogout(){
   sessionStorage.removeItem("kcby_admin_user");
   document.getElementById("adminLogin").style.display = "block";
@@ -901,21 +858,22 @@ function handleLogout(){
   document.getElementById("loginUser").value = "";
   document.getElementById("loginPass").value = "";
 }
-
 function showAdminPanel(){
   document.getElementById("adminLogin").style.display = "none";
   document.getElementById("adminPanel").style.display = "block";
   document.getElementById("adminName").textContent = ADMIN_USERS[getCurrentUser()].name;
-  // Init editor panes
   populateSeasonSelect("kcby");
   populateSeasonSelect("es");
   renderEpEditor("kcby");
   renderEpEditor("es");
   renderStaffEditor();
+  renderAchEditor();
+  renderAdvEditor();
+  renderConEditor();
 }
 
 // =============================================================
-// DATA LAYER (localStorage)
+// DATA LAYER
 // =============================================================
 function loadData(key, fallback){
   try {
@@ -924,48 +882,75 @@ function loadData(key, fallback){
   } catch(e){ return JSON.parse(JSON.stringify(fallback)); }
 }
 function saveData(key, data){
-  localStorage.setItem("kcby_" + key, JSON.stringify(data));
-  showToast();
+  try {
+    localStorage.setItem("kcby_" + key, JSON.stringify(data));
+    showToast();
+  } catch(e){
+    alert("Storage limit reached. Try removing some photos or content. (Browser storage is ~5MB.)");
+  }
 }
-
 let DATA = {
-  kcby:    loadData("episodes", KCBY_DEFAULT),
-  es:      loadData("espanol",  ESPANOL_DEFAULT),
-  staff:   loadData("staff",    STAFF_DEFAULT)
+  kcby:  loadData("episodes", KCBY_DEFAULT),
+  es:    loadData("espanol",  ESPANOL_DEFAULT),
+  staff: loadData("staff",    STAFF_DEFAULT),
+  ach:   loadData("ach",      ACH_DEFAULT),
+  adv:   loadData("adv",      ADV_DEFAULT),
+  con:   loadData("con",      CON_DEFAULT)
 };
-
 function persist(which){
-  if(which === "kcby")  saveData("episodes", DATA.kcby);
-  if(which === "es")    saveData("espanol",  DATA.es);
-  if(which === "staff") saveData("staff",    DATA.staff);
+  const map = {kcby:"episodes",es:"espanol",staff:"staff",ach:"ach",adv:"adv",con:"con"};
+  saveData(map[which], DATA[which]);
 }
-
 function showToast(msg){
   const t = document.getElementById("toast");
   t.textContent = "✓ " + (msg || "Saved");
   t.classList.add("show");
   setTimeout(()=>t.classList.remove("show"), 1800);
 }
-
 function resetAllData(){
   if(!confirm("Erase all changes and restore defaults? This can't be undone.")) return;
-  localStorage.removeItem("kcby_episodes");
-  localStorage.removeItem("kcby_espanol");
-  localStorage.removeItem("kcby_staff");
-  DATA.kcby  = JSON.parse(JSON.stringify(KCBY_DEFAULT));
-  DATA.es    = JSON.parse(JSON.stringify(ESPANOL_DEFAULT));
+  ["episodes","espanol","staff","ach","adv","con"].forEach(k=>localStorage.removeItem("kcby_"+k));
+  DATA.kcby = JSON.parse(JSON.stringify(KCBY_DEFAULT));
+  DATA.es = JSON.parse(JSON.stringify(ESPANOL_DEFAULT));
   DATA.staff = JSON.parse(JSON.stringify(STAFF_DEFAULT));
+  DATA.ach = JSON.parse(JSON.stringify(ACH_DEFAULT));
+  DATA.adv = JSON.parse(JSON.stringify(ADV_DEFAULT));
+  DATA.con = JSON.parse(JSON.stringify(CON_DEFAULT));
   showToast("Reset to defaults");
-  populateSeasonSelect("kcby");
-  populateSeasonSelect("es");
-  renderEpEditor("kcby");
-  renderEpEditor("es");
-  renderStaffEditor();
+  showAdminPanel();
   rebuildPublic();
 }
 
 // =============================================================
-// PUBLIC PAGE RENDERING
+// VIDEO URL HELPERS
+// =============================================================
+function getVideoIds(url){
+  if(!url) return null;
+  let ytId = null, vmId = null;
+  let m1 = url.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+  let m2 = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+  let m3 = url.match(/youtube\.com\/(?:shorts|embed|live)\/([a-zA-Z0-9_-]{11})/);
+  if(m1) ytId = m1[1]; else if(m2) ytId = m2[1]; else if(m3) ytId = m3[1];
+  const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if(vm) vmId = vm[1];
+  return ytId ? {type:"yt",id:ytId} : (vmId ? {type:"vm",id:vmId} : null);
+}
+function toEmbed(url, autoplay){
+  const ids = getVideoIds(url);
+  if(!ids) return url;
+  const ap = autoplay ? "1" : "0";
+  if(ids.type === "yt") return `https://www.youtube-nocookie.com/embed/${ids.id}?rel=0&playsinline=1&autoplay=${ap}`;
+  return `https://player.vimeo.com/video/${ids.id}${autoplay?"?autoplay=1":""}`;
+}
+function toThumb(url){
+  const ids = getVideoIds(url);
+  if(!ids) return null;
+  if(ids.type === "yt") return `https://img.youtube.com/vi/${ids.id}/hqdefault.jpg`;
+  return `https://vumbnail.com/${ids.id}.jpg`;
+}
+
+// =============================================================
+// PUBLIC RENDERING
 // =============================================================
 function renderSeasons(tabsEl, gridEl, data){
   const seasons = Object.keys(data);
@@ -978,12 +963,14 @@ function renderSeasons(tabsEl, gridEl, data){
   function paint(season){
     const eps = data[season] || [];
     gridEl.innerHTML = eps.map(e=>{
-      const vid = e.video ? `onclick="playVideo('${encodeURIComponent(e.video)}','${escapeHtml(e.t)}')"` : "";
-      const cursor = e.video ? 'style="cursor:pointer"' : '';
-      return `<div class="ep-card" ${vid} ${cursor}>
-        <div class="ep-thumb"><span class="ep-num">${e.n}</span></div>
+      const thumb = toThumb(e.video);
+      const hasImg = thumb ? "has-img" : "";
+      const bg = thumb ? `style="background-image:url('${thumb}')"` : "";
+      const click = e.video ? `onclick="playVideo('${encodeURIComponent(e.video)}','${escapeAttr(e.t)}')" style="cursor:pointer"` : "";
+      return `<div class="ep-card" ${click}>
+        <div class="ep-thumb ${hasImg}" ${bg}><span class="ep-num">${e.n}</span></div>
         <div class="ep-meta">
-          <div class="tag">${e.tag||season}</div>
+          <div class="tag">${escapeHtml(e.tag||season)}</div>
           <h3>${escapeHtml(e.t)}</h3>
           <p>${escapeHtml(e.d||"")}</p>
         </div>
@@ -1000,6 +987,31 @@ function renderSeasons(tabsEl, gridEl, data){
   paint(seasons[0]);
 }
 
+function findLatestEpisode(){
+  const seasons = Object.keys(DATA.kcby);
+  for(const s of seasons){
+    for(const ep of DATA.kcby[s]){
+      if(ep.tag && /latest/i.test(ep.tag) && ep.video) return ep;
+    }
+  }
+  for(const s of seasons){
+    for(const ep of DATA.kcby[s]){
+      if(ep.video) return ep;
+    }
+  }
+  return null;
+}
+function updateHeroVideo(){
+  const iframe = document.getElementById("heroVideo");
+  if(!iframe) return;
+  const latest = findLatestEpisode();
+  if(latest && latest.video){
+    iframe.src = toEmbed(latest.video, false);
+  } else {
+    iframe.src = "https://player.vimeo.com/video/76979871?title=0&byline=0";
+  }
+}
+
 function renderStaffPublic(){
   const c = document.getElementById("staffContent");
   if(!c) return;
@@ -1008,11 +1020,12 @@ function renderStaffPublic(){
     html += `<h3 class="staff-section-title">${escapeHtml(sec.title)}</h3>`;
     html += `<div class="staff-grid">`;
     sec.cards.forEach(card=>{
-      html += `<div class="staff-card"><div class="staff-photo">${escapeHtml(card.initials||"")}</div><div class="staff-info"><div class="role">${escapeHtml(card.role)}</div><h4>${escapeHtml(card.name)}</h4><p>${escapeHtml(card.note||"")}</p></div></div>`;
+      const hasImg = card.photo ? "has-img" : "";
+      const bg = card.photo ? `style="background-image:url('${card.photo}')"` : "";
+      html += `<div class="staff-card"><div class="staff-photo ${hasImg}" ${bg}><span class="placeholder">${escapeHtml(card.initials||"")}</span></div><div class="staff-info"><div class="role">${escapeHtml(card.role)}</div><h4>${escapeHtml(card.name)}</h4><p>${escapeHtml(card.note||"")}</p></div></div>`;
     });
     html += `</div>`;
   });
-  // Members
   const memberCount = DATA.staff.members || 0;
   if(memberCount > 0){
     html += `<h3 class="staff-section-title">Members</h3>`;
@@ -1027,33 +1040,105 @@ function renderStaffPublic(){
   c.innerHTML = html;
 }
 
+function renderAchPublic(){
+  const c = document.getElementById("achievementsContent");
+  if(!c) return;
+  let html = "";
+  DATA.ach.forEach(yr=>{
+    html += `<div class="award-year"><h3>${escapeHtml(yr.year)}</h3><div class="award-list">`;
+    yr.awards.forEach(a=>{
+      html += `<div class="award"><div><div class="org">${escapeHtml(a.org)}</div><div class="name">${escapeHtml(a.name)}</div></div><div class="place">${escapeHtml(a.place)}</div></div>`;
+    });
+    html += `</div></div>`;
+  });
+  c.innerHTML = html;
+}
+
+function renderAdvPublic(){
+  const c = document.getElementById("advertisingContent");
+  if(!c) return;
+  let html = '<div class="ad-intro">';
+  DATA.adv.intro.forEach(p=>{ html += `<p>${escapeHtml(p)}</p>`; });
+  html += '</div>';
+  html += '<h3 class="ad-section-title">Program Directors</h3><div class="director-grid">';
+  DATA.adv.directors.forEach(d=>{
+    html += `<a href="mailto:${escapeAttr(d.email)}" class="director"><div class="director-mark">${escapeHtml(d.initials||"")}</div><div class="director-info"><div class="role">${escapeHtml(d.role)}</div><h4>${escapeHtml(d.name)}</h4><p>${escapeHtml(d.email)}</p></div></a>`;
+  });
+  html += '</div>';
+  if(DATA.adv.features.length){
+    html += '<h3 class="ad-section-title">Featured Work</h3>';
+    DATA.adv.features.forEach(f=>{
+      const reverse = f.reverse ? "reverse" : "";
+      const embed = f.video ? toEmbed(f.video, false) : "https://player.vimeo.com/video/76979871?title=0&byline=0";
+      html += `<div class="feature-ad ${reverse}">
+        <div class="feature-video"><div class="video-wrap"><div class="video-badge">Special Projects</div><iframe src="${embed}" allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div></div>
+        <div class="feature-text"><div class="tag-pill">${escapeHtml(f.tag)}</div><h3 class="display">${escapeHtml(f.title)}<br><span class="serif" style="color:var(--accent)">${escapeHtml(f.subtitle)}</span></h3><p>${escapeHtml(f.description)}</p></div>
+      </div>`;
+    });
+  }
+  c.innerHTML = html;
+}
+
+function renderConPublic(){
+  const c = document.getElementById("contactContent");
+  if(!c) return;
+  const addrLines = (DATA.con.address||"").split("\n").map(escapeHtml).join("<br>");
+  c.innerHTML = `<div class="contact-grid">
+    <div class="contact-info">
+      <p>${escapeHtml(DATA.con.intro)}</p>
+      <div class="contact-block"><div class="lab">Email</div><div class="val"><a href="mailto:${escapeAttr(DATA.con.email)}">${escapeHtml(DATA.con.email)}</a></div></div>
+      <div class="contact-block"><div class="lab">Studio</div><div class="val">${addrLines}</div></div>
+      <div class="contact-block"><div class="lab">Follow</div><div class="val">${escapeHtml(DATA.con.social)}</div></div>
+    </div>
+    <form onsubmit="event.preventDefault();alert('Thanks! Your message has been sent.');this.reset();">
+      <div class="field"><label>Name</label><input type="text" required></div>
+      <div class="field"><label>Email</label><input type="email" required></div>
+      <div class="field"><label>Topic</label><select><option>Story tip</option><option>Advertising</option><option>Joining KCBY</option><option>General question</option></select></div>
+      <div class="field"><label>Message</label><textarea required></textarea></div>
+      <button type="submit" class="btn">Send Message →</button>
+    </form>
+  </div>`;
+}
+
+function renderRecentShows(){
+  const grid = document.getElementById("recentShowsGrid");
+  if(!grid) return;
+  // Get first 3 episodes from the most recent season
+  const seasons = Object.keys(DATA.kcby);
+  if(seasons.length === 0){ grid.innerHTML = ""; return; }
+  const latest = DATA.kcby[seasons[0]].slice(0, 3);
+  const seasonName = seasons[0];
+  grid.innerHTML = latest.map(e=>{
+    const thumb = toThumb(e.video);
+    const hasImg = thumb ? "has-img" : "";
+    const bg = thumb ? `style="background-image:url('${thumb}')"` : "";
+    const click = e.video ? `onclick="event.stopPropagation();playVideo('${encodeURIComponent(e.video)}','${escapeAttr(e.t)}')" style="cursor:pointer"` : `onclick="route('episodes')"`;
+    return `<div class="ep-card" ${click}>
+      <div class="ep-thumb ${hasImg}" ${bg}><span class="ep-num">${e.n}</span></div>
+      <div class="ep-meta">
+        <div class="tag">${escapeHtml(e.tag||seasonName)}</div>
+        <h3>${escapeHtml(e.t)}</h3>
+        <p>${escapeHtml(e.d||"")}</p>
+      </div>
+    </div>`;
+  }).join("");
+}
+
 function rebuildPublic(){
   renderSeasons(document.getElementById("kcbyTabs"), document.getElementById("kcbyGrid"), DATA.kcby);
   renderSeasons(document.getElementById("esTabs"),   document.getElementById("esGrid"),   DATA.es);
+  renderRecentShows();
   renderStaffPublic();
+  renderAchPublic();
+  renderAdvPublic();
+  renderConPublic();
+  updateHeroVideo();
 }
 
-// Simple video modal
+// Video modal
 function playVideo(urlEnc, title){
   const url = decodeURIComponent(urlEnc);
-  let embed = url;
-  // YouTube: watch, youtu.be, shorts, embed, live
-  let ytId = null;
-  let m1 = url.match(/[?&]v=([a-zA-Z0-9_-]{11})/);              // ...watch?v=ID
-  let m2 = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);          // youtu.be/ID
-  let m3 = url.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/);// shorts/ID
-  let m4 = url.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/);// already embed
-  let m5 = url.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/); // live/ID
-  if(m1) ytId = m1[1];
-  else if(m2) ytId = m2[1];
-  else if(m3) ytId = m3[1];
-  else if(m4) ytId = m4[1];
-  else if(m5) ytId = m5[1];
-  if(ytId){ embed = `https://www.youtube-nocookie.com/embed/${ytId}?rel=0&playsinline=1`; }
-  // Vimeo
-  const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-  if(vm){ embed = `https://player.vimeo.com/video/${vm[1]}`; }
-
+  const embed = toEmbed(url, true);
   const m = document.createElement("div");
   m.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;display:flex;align-items:center;justify-content:center;padding:24px";
   m.innerHTML = `<div style="position:relative;width:100%;max-width:1100px;aspect-ratio:16/9"><iframe src="${embed}" style="width:100%;height:100%;border:0;border-radius:4px" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen></iframe></div><button style="position:absolute;top:24px;right:24px;background:none;border:1px solid #fff;color:#fff;padding:8px 16px;cursor:pointer;font-weight:600;border-radius:2px">Close ✕</button>`;
@@ -1062,12 +1147,11 @@ function playVideo(urlEnc, title){
 }
 
 // =============================================================
-// ADMIN: Episode editor
+// EPISODE EDITOR
 // =============================================================
 function getDataset(which){ return which==="kcby" ? DATA.kcby : DATA.es; }
 function getSelectId(which){ return which==="kcby" ? "seasonSel" : "esSeasonSel"; }
 function getEditorId(which){ return which==="kcby" ? "epEditor" : "esEditor"; }
-
 function populateSeasonSelect(which){
   const sel = document.getElementById(getSelectId(which));
   const data = getDataset(which);
@@ -1076,7 +1160,6 @@ function populateSeasonSelect(which){
   sel.innerHTML = seasons.map(s=>`<option value="${s}">${s}</option>`).join("");
   if(current && seasons.includes(current)) sel.value = current;
 }
-
 function addSeason(which){
   const name = prompt("New season name (e.g. 2026–27):");
   if(!name) return;
@@ -1089,16 +1172,13 @@ function addSeason(which){
   renderEpEditor(which);
   rebuildPublic();
 }
-
 function addEpisode(which){
   const sel = document.getElementById(getSelectId(which));
   const season = sel.value;
   if(!season){ alert("Add a season first."); return; }
-  const data = getDataset(which);
-  data[season].unshift({n:0, t:"New Show", d:"", tag:"", video:"", _new:true});
+  getDataset(which)[season].unshift({n:0, t:"New Show", d:"", tag:"", video:"", _new:true});
   renderEpEditor(which);
 }
-
 function renderEpEditor(which){
   const data = getDataset(which);
   const sel = document.getElementById(getSelectId(which));
@@ -1133,19 +1213,13 @@ function renderEpEditor(which){
     </div>`;
   }).join("");
 }
-
-function editEpisode(which, season, i){
-  getDataset(which)[season][i]._editing = true;
-  renderEpEditor(which);
-}
-
+function editEpisode(which, season, i){ getDataset(which)[season][i]._editing = true; renderEpEditor(which); }
 function cancelEpisode(which, season, i){
   const ep = getDataset(which)[season][i];
   if(ep._new) getDataset(which)[season].splice(i,1);
   else delete ep._editing;
   renderEpEditor(which);
 }
-
 function saveEpisode(which, season, i){
   const ep = getDataset(which)[season][i];
   ep.n = parseInt(document.getElementById(`${which}-n-${i}`).value) || 0;
@@ -1153,13 +1227,11 @@ function saveEpisode(which, season, i){
   ep.tag = document.getElementById(`${which}-tag-${i}`).value;
   ep.d = document.getElementById(`${which}-d-${i}`).value;
   ep.video = document.getElementById(`${which}-v-${i}`).value;
-  delete ep._editing;
-  delete ep._new;
+  delete ep._editing; delete ep._new;
   persist(which);
   renderEpEditor(which);
   rebuildPublic();
 }
-
 function deleteEpisode(which, season, i){
   const ep = getDataset(which)[season][i];
   if(!confirm(`Delete "${ep.t}"?`)) return;
@@ -1170,7 +1242,7 @@ function deleteEpisode(which, season, i){
 }
 
 // =============================================================
-// ADMIN: Staff editor
+// STAFF EDITOR (with photo upload)
 // =============================================================
 function renderStaffEditor(){
   const c = document.getElementById("staffEditor");
@@ -1183,7 +1255,14 @@ function renderStaffEditor(){
         <button class="del-btn" onclick="deleteStaffSection(${si})">Delete Section</button>
       </div>`;
     sec.cards.forEach((card, ci)=>{
+      const photoStyle = card.photo ? `background-image:url('${card.photo}')` : "";
+      const photoClass = card.photo ? "has-photo" : "";
+      const photoLabel = card.photo ? `<span class="photo-label">Change</span>` : "+ Photo";
       html += `<div class="staff-edit-row">
+        <label class="photo-upload ${photoClass}" style="${photoStyle}">
+          ${photoLabel}
+          <input type="file" accept="image/*" onchange="uploadStaffPhoto(${si},${ci},this)">
+        </label>
         <input type="text" placeholder="ID" maxlength="3" value="${escapeAttr(card.initials||'')}" oninput="DATA.staff.sections[${si}].cards[${ci}].initials=this.value">
         <input type="text" placeholder="Role" value="${escapeAttr(card.role||'')}" oninput="DATA.staff.sections[${si}].cards[${ci}].role=this.value">
         <input type="text" placeholder="Name" value="${escapeAttr(card.name||'')}" oninput="DATA.staff.sections[${si}].cards[${ci}].name=this.value">
@@ -1196,53 +1275,166 @@ function renderStaffEditor(){
   html += `<div style="margin-top:20px"><button class="btn" onclick="saveStaff()">Save All Staff Changes</button></div>`;
   c.innerHTML = html;
 }
-
-function addStaffSection(){
-  DATA.staff.sections.push({title:"New Section",cards:[]});
-  renderStaffEditor();
-}
-
+function addStaffSection(){ DATA.staff.sections.push({title:"New Section",cards:[]}); renderStaffEditor(); }
 function deleteStaffSection(si){
   if(!confirm(`Delete section "${DATA.staff.sections[si].title}"?`)) return;
-  DATA.staff.sections.splice(si,1);
-  renderStaffEditor();
+  DATA.staff.sections.splice(si,1); renderStaffEditor();
 }
-
 function addStaffCard(si){
-  DATA.staff.sections[si].cards.push({role:"Role",name:"Add Name",note:"",initials:""});
+  DATA.staff.sections[si].cards.push({role:"Role",name:"Add Name",note:"",initials:"",photo:""});
   renderStaffEditor();
 }
-
-function deleteStaffCard(si, ci){
-  DATA.staff.sections[si].cards.splice(ci,1);
-  renderStaffEditor();
-}
-
-function saveStaff(){
-  persist("staff");
-  rebuildPublic();
-  renderStaffEditor();
-}
-
+function deleteStaffCard(si, ci){ DATA.staff.sections[si].cards.splice(ci,1); renderStaffEditor(); }
+function saveStaff(){ persist("staff"); rebuildPublic(); renderStaffEditor(); }
 function updateMemberCount(){
   const n = prompt("How many general (non-leadership) members? Currently: " + (DATA.staff.members||0), DATA.staff.members||0);
   if(n === null) return;
   const num = parseInt(n);
   if(isNaN(num) || num < 0){ alert("Please enter a valid number."); return; }
-  DATA.staff.members = num;
-  persist("staff");
-  rebuildPublic();
+  DATA.staff.members = num; persist("staff"); rebuildPublic();
 }
+// Resize image and convert to base64 for localStorage
+function uploadStaffPhoto(si, ci, input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const canvas = document.createElement("canvas");
+      const size = 320;
+      canvas.width = size; canvas.height = size;
+      const ctx = canvas.getContext("2d");
+      // Center-crop to square
+      const ar = img.width / img.height;
+      let sw, sh, sx, sy;
+      if(ar > 1){ sh = img.height; sw = img.height; sx = (img.width - sw)/2; sy = 0; }
+      else { sw = img.width; sh = img.width; sx = 0; sy = (img.height - sh)/2; }
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, size, size);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+      DATA.staff.sections[si].cards[ci].photo = dataUrl;
+      persist("staff");
+      renderStaffEditor();
+      rebuildPublic();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// =============================================================
+// ACHIEVEMENTS EDITOR
+// =============================================================
+function renderAchEditor(){
+  const c = document.getElementById("achEditor");
+  let html = "";
+  DATA.ach.forEach((yr, yi)=>{
+    html += `<div class="editor-section">
+      <div class="editor-section-head">
+        <input type="text" value="${escapeAttr(yr.year)}" oninput="DATA.ach[${yi}].year=this.value" style="background:var(--bg-3);border:1px solid var(--line);color:var(--accent);padding:10px 14px;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:18px;border-radius:2px;flex:1">
+        <button class="btn ghost small" onclick="addAward(${yi})">+ Award</button>
+        <button class="del-btn" onclick="deleteAchYear(${yi})">Delete Year</button>
+      </div>`;
+    yr.awards.forEach((a, ai)=>{
+      html += `<div class="row">
+        <input type="text" placeholder="Org (NSPA)" value="${escapeAttr(a.org)}" oninput="DATA.ach[${yi}].awards[${ai}].org=this.value">
+        <input type="text" placeholder="Award name" value="${escapeAttr(a.name)}" oninput="DATA.ach[${yi}].awards[${ai}].name=this.value">
+        <input type="text" placeholder="Place" value="${escapeAttr(a.place)}" oninput="DATA.ach[${yi}].awards[${ai}].place=this.value">
+        <button class="del-btn" onclick="deleteAward(${yi},${ai})">✕</button>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  c.innerHTML = html;
+}
+function addAchYear(){
+  const y = prompt("Year (e.g. 2024–25):");
+  if(!y) return;
+  DATA.ach.unshift({year:y, awards:[]});
+  renderAchEditor();
+}
+function deleteAchYear(yi){
+  if(!confirm(`Delete year "${DATA.ach[yi].year}"?`)) return;
+  DATA.ach.splice(yi,1); renderAchEditor();
+}
+function addAward(yi){
+  DATA.ach[yi].awards.push({org:"",name:"",place:""});
+  renderAchEditor();
+}
+function deleteAward(yi, ai){ DATA.ach[yi].awards.splice(ai,1); renderAchEditor(); }
+function saveAch(){ persist("ach"); rebuildPublic(); }
+
+// =============================================================
+// ADVERTISING EDITOR
+// =============================================================
+function renderAdvEditor(){
+  const c = document.getElementById("advEditor");
+  let html = `<div class="editor-section">
+    <div class="editor-section-head"><h4>Intro Paragraphs</h4><button class="btn ghost small" onclick="addAdvIntro()">+ Paragraph</button></div>`;
+  DATA.adv.intro.forEach((p, i)=>{
+    html += `<div class="editor-field" style="display:flex;gap:8px;align-items:flex-start">
+      <textarea oninput="DATA.adv.intro[${i}]=this.value" style="flex:1">${escapeHtml(p)}</textarea>
+      <button class="del-btn" onclick="deleteAdvIntro(${i})">✕</button>
+    </div>`;
+  });
+  html += `</div>`;
+  // Directors
+  html += `<div class="editor-section">
+    <div class="editor-section-head"><h4>Program Directors</h4><button class="btn ghost small" onclick="addAdvDirector()">+ Director</button></div>`;
+  DATA.adv.directors.forEach((d, i)=>{
+    html += `<div class="row" style="grid-template-columns:60px 1fr 1fr 1fr auto">
+      <input type="text" placeholder="ID" maxlength="3" value="${escapeAttr(d.initials)}" oninput="DATA.adv.directors[${i}].initials=this.value">
+      <input type="text" placeholder="Name" value="${escapeAttr(d.name)}" oninput="DATA.adv.directors[${i}].name=this.value">
+      <input type="text" placeholder="Role" value="${escapeAttr(d.role)}" oninput="DATA.adv.directors[${i}].role=this.value">
+      <input type="email" placeholder="Email" value="${escapeAttr(d.email)}" oninput="DATA.adv.directors[${i}].email=this.value">
+      <button class="del-btn" onclick="deleteAdvDirector(${i})">✕</button>
+    </div>`;
+  });
+  html += `</div>`;
+  // Featured ads
+  html += `<div class="editor-section">
+    <div class="editor-section-head"><h4>Featured Work</h4><button class="btn ghost small" onclick="addAdvFeature()">+ Feature</button></div>`;
+  DATA.adv.features.forEach((f, i)=>{
+    html += `<div style="border:1px solid var(--line);border-radius:4px;padding:14px;margin-bottom:10px">
+      <div class="editor-section-head"><strong style="font-size:13px">${escapeHtml(f.title)||"Untitled"}</strong><button class="del-btn" onclick="deleteAdvFeature(${i})">Remove</button></div>
+      <div class="editor-field"><label>Tag pill</label><input type="text" value="${escapeAttr(f.tag)}" oninput="DATA.adv.features[${i}].tag=this.value"></div>
+      <div class="editor-field"><label>Title</label><input type="text" value="${escapeAttr(f.title)}" oninput="DATA.adv.features[${i}].title=this.value"></div>
+      <div class="editor-field"><label>Subtitle (italic)</label><input type="text" value="${escapeAttr(f.subtitle)}" oninput="DATA.adv.features[${i}].subtitle=this.value"></div>
+      <div class="editor-field"><label>Video URL</label><input type="text" value="${escapeAttr(f.video)}" oninput="DATA.adv.features[${i}].video=this.value"></div>
+      <div class="editor-field"><label>Description</label><textarea oninput="DATA.adv.features[${i}].description=this.value">${escapeHtml(f.description)}</textarea></div>
+      <label style="font-size:12px;color:var(--ink-dim);display:flex;gap:8px;align-items:center"><input type="checkbox" ${f.reverse?"checked":""} onchange="DATA.adv.features[${i}].reverse=this.checked"> Reverse layout (video on right)</label>
+    </div>`;
+  });
+  html += `</div>`;
+  c.innerHTML = html;
+}
+function addAdvIntro(){ DATA.adv.intro.push(""); renderAdvEditor(); }
+function deleteAdvIntro(i){ DATA.adv.intro.splice(i,1); renderAdvEditor(); }
+function addAdvDirector(){ DATA.adv.directors.push({name:"",email:"",role:"Program Director",initials:""}); renderAdvEditor(); }
+function deleteAdvDirector(i){ DATA.adv.directors.splice(i,1); renderAdvEditor(); }
+function addAdvFeature(){ DATA.adv.features.push({title:"New Feature",subtitle:"Advertisement",tag:"Tag",video:"",description:"",reverse:false}); renderAdvEditor(); }
+function deleteAdvFeature(i){ DATA.adv.features.splice(i,1); renderAdvEditor(); }
+function saveAdv(){ persist("adv"); rebuildPublic(); }
+
+// =============================================================
+// CONTACT EDITOR
+// =============================================================
+function renderConEditor(){
+  const c = document.getElementById("conEditor");
+  c.innerHTML = `<div class="editor-section">
+    <div class="editor-field"><label>Intro paragraph</label><textarea oninput="DATA.con.intro=this.value">${escapeHtml(DATA.con.intro)}</textarea></div>
+    <div class="editor-field"><label>Email</label><input type="email" value="${escapeAttr(DATA.con.email)}" oninput="DATA.con.email=this.value"></div>
+    <div class="editor-field"><label>Studio Address (one line per row)</label><textarea oninput="DATA.con.address=this.value">${escapeHtml(DATA.con.address)}</textarea></div>
+    <div class="editor-field"><label>Social handle</label><input type="text" value="${escapeAttr(DATA.con.social)}" oninput="DATA.con.social=this.value"></div>
+  </div>`;
+}
+function saveCon(){ persist("con"); rebuildPublic(); }
 
 // =============================================================
 // UTILS
 // =============================================================
-function escapeHtml(s){
-  return String(s||"").replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-function escapeAttr(s){
-  return String(s||"").replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
+function escapeHtml(s){ return String(s||"").replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeAttr(s){ return String(s||"").replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 // =============================================================
 // ROUTING
@@ -1257,7 +1449,6 @@ function route(page){
   document.getElementById("navLinks").classList.remove("open");
   window.scrollTo({top:0, behavior:"smooth"});
   history.replaceState(null, "", "#"+page);
-  // Re-check admin auth state when entering admin page
   if(page === "admin"){
     if(isLoggedIn()) showAdminPanel();
     else {
@@ -1266,8 +1457,6 @@ function route(page){
     }
   }
 }
-
-// Admin tab switching
 document.addEventListener("click", e=>{
   const tab = e.target.closest(".adm-tab");
   if(!tab) return;
@@ -1287,6 +1476,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
   if(document.getElementById(hash)) route(hash);
 });
 </script>
+
 
 </body>
 </html>
